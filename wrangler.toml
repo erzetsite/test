@@ -1,0 +1,24 @@
+name = "shorty" # The name of your worker
+main = "worker.js" # The entry point for your worker code
+compatibility_date = "2023-10-30" # Use a recent compatibility date
+
+# Routes tell Cloudflare which requests should trigger this worker.
+# The worker handles API calls via api.shorty.rzsite.my.id and redirects via rzsite.my.id/+
+routes = [
+  { pattern = "api.shorty.rzsite.my.id/*", zone_name = "rzsite.my.id" }, # Handles API calls
+  { pattern = "rzsite.my.id/+*", zone_name = "rzsite.my.id" }          # Handles redirects
+]
+
+# KV Namespace binding
+# Make sure you create a KV namespace in your Cloudflare dashboard
+# or via the command line: wrangler kv:namespace create SHORTY_LINKS
+# Then, add the preview_id and id obtained from the command output below.
+[[kv_namespaces]]
+binding = "SHORTY_LINKS" # This is the variable name used in worker.js (env.SHORTY_LINKS)
+id = "318fe70dab8037a334d2abd0d9683db9" # Your Production KV namespace ID
+preview_id = "" # Preview ID was not provided, leave empty for now
+
+# Optional: Add site configuration if you plan to serve index.html via the worker directly
+# [site]
+# bucket = "./" # Directory containing your static assets (like index.html)
+# entry-point = "." # Can be omitted if you only have worker.js
